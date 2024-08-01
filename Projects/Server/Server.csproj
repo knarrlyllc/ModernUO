@@ -35,6 +35,9 @@
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.2.2" />
         <PackageReference Include="LibDeflate.Bindings" Version="1.0.2.120" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+        <PackageReference Include="MongoDB.Bson" Version="2.28.0" />
+        <PackageReference Include="MongoDB.Driver" Version="2.28.0" />
         <PackageReference Include="PollGroup" Version="1.5.1" />
         <PackageReference Include="System.IO.Hashing" Version="8.0.0" />
 

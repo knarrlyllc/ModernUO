@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using Server.Logging;
+using Server.Models;
+using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Server.Accounting;
 
 public class Accounts : GenericEntityPersistence<IAccount>
 {
+
+
     private static readonly ILogger logger = LogFactory.GetLogger(typeof(Accounts));
 
     private static readonly Dictionary<string, IAccount> _accountsByName = new(32, StringComparer.OrdinalIgnoreCase);
@@ -33,8 +40,27 @@ public class Accounts : GenericEntityPersistence<IAccount>
 
     public static void Add(Account a)
     {
+
+        var client = new MongoClient("mongodb://localhost:27017");
+        var database = client.GetDatabase("ServUO");
+        var collection = database.GetCollection<BsonDocument>("useraccounts");
+
         _accountsByName[a.Username] = a;
         _accountsPersistence.AddEntity(a);
+
+        var userAccount = new UserAccount
+        {
+            Username = a.Username,
+            Password = a.Password
+        };
+
+        var document = new BsonDocument
+            {
+                { "UserName", a.Username },
+                { "Password", a.Password }
+            };
+        collection.InsertOneAsync(document);
+
     }
 
     public static void Remove(IAccount a)
